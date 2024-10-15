@@ -7,7 +7,14 @@
         <img class="logo" src="@/assets/images/dumbbell-light.png" alt="" />
         <h1 class="text-lg">Active Tracker</h1>
       </div>
-      <ul></ul>
+      <ul class="nav-items">
+        <router-link class="nav-item" :to="{ name: 'home' }">Home</router-link>
+        <router-link class="nav-item" :to="{ name: '' }">Create</router-link>
+        <router-link class="nav-item" :to="{ name: 'login' }"
+          >Login</router-link
+        >
+        <li class="nav-item">Logout</li>
+      </ul>
     </nav>
   </header>
 </template>
@@ -40,6 +47,20 @@
 
 h1 {
   font-size: 1.125rem;
+}
+
+.nav-items {
+  display: flex;
+  flex: 1 1 0%;
+  justify-content: flex-end;
+  column-gap: 2.5rem;
+  list-style-type: none;
+}
+
+.nav-item {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @media not all and (max-width: 640px) {
