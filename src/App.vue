@@ -1,11 +1,40 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import Navigation from './components/Navigation.vue'
+import { onMounted, ref } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
+import { useUserStore } from '@/stores/user'
+import { log } from 'console'
+
+const userStore = useUserStore()
+
+const appReady = ref(false)
+
+onMounted(async () => {
+  console.log('onMounted')
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  console.log(user)
+  if (!user) {
+    appReady.value = true
+  }
+})
+
+supabase.auth.onAuthStateChange((_, session) => {
+  console.log('onAuthStateChange')
+  console.log(session)
+  userStore.setUser(session)
+  appReady.value = true
+})
 </script>
 
 <template>
-  <Navigation />
-  <RouterView />
+  <div v-if="appReady">
+    <Navigation />
+    <RouterView />
+  </div>
 </template>
 
 <style scoped></style>

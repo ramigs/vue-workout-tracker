@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref, type Reactive, type Ref } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'vue-router'
 
 interface LoginForm {
   email: string
@@ -12,6 +14,31 @@ const loginForm: LoginForm = reactive({
 })
 
 const errorMsg: Ref<string | null> = ref(null)
+
+const router = useRouter()
+
+const login = async () => {
+  try {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginForm.email,
+      password: loginForm.password,
+    })
+    if (error) throw error
+    router.push({ name: 'home' })
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      errorMsg.value = error.message
+      setTimeout(() => {
+        errorMsg.value = null
+      }, 5000)
+    } else {
+      errorMsg.value = 'Oops! Something went wrong...'
+      setTimeout(() => {
+        errorMsg.value = null
+      }, 5000)
+    }
+  }
+}
 </script>
 
 <template>
@@ -19,7 +46,7 @@ const errorMsg: Ref<string | null> = ref(null)
     <div v-if="errorMsg" class="error">
       <p class="error-msg">{{ errorMsg }}</p>
     </div>
-    <form class="register-form">
+    <form @submit.prevent="login" class="register-form">
       <h1>Login</h1>
       <div class="form-group">
         <label for="email">Email</label>

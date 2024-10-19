@@ -1,4 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+
+const router = useRouter()
+
+const userStore = useUserStore()
+
+const logout = async () => {
+  await supabase.auth.signOut()
+  router.push({ name: 'home' })
+}
+</script>
 
 <template>
   <header class="header">
@@ -9,11 +22,16 @@
       </div>
       <ul class="nav-items">
         <router-link class="nav-item" :to="{ name: 'home' }">Home</router-link>
-        <router-link class="nav-item" :to="{ name: '' }">Create</router-link>
-        <router-link class="nav-item" :to="{ name: 'login' }"
+        <router-link v-if="userStore.user" class="nav-item" :to="{ name: '' }"
+          >Create</router-link
+        >
+        <router-link
+          v-if="!userStore.user"
+          class="nav-item"
+          :to="{ name: 'login' }"
           >Login</router-link
         >
-        <li class="nav-item">Logout</li>
+        <li v-if="userStore.user" @click="logout" class="nav-item">Logout</li>
       </ul>
     </nav>
   </header>
