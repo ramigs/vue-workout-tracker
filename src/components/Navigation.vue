@@ -22,7 +22,10 @@ const logout = async () => {
       </div>
       <ul class="nav-items">
         <router-link class="nav-item" :to="{ name: 'home' }">Home</router-link>
-        <router-link v-if="userStore.user" class="nav-item" :to="{ name: '' }"
+        <router-link
+          v-if="userStore.user"
+          class="nav-item"
+          :to="{ name: 'create' }"
           >Create</router-link
         >
         <router-link

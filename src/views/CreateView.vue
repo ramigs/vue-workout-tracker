@@ -3,107 +3,70 @@ import { reactive, ref, type Reactive, type Ref } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'vue-router'
 
-/* const email: Ref<string | null> = ref(null)
-const password: Ref<string | null> = ref(null)
-const confirmPassword: Ref<string | null> = ref(null) */
+type WorkoutType = 'cardio' | 'strength'
 
-interface RegisterForm {
-  email: string
-  password: string
-  confirmPassword: string
+interface WorkoutForm {
+  workoutName: string
+  workoutType: 'select-workout' | WorkoutType
+  exercises: Array<string>
 }
 
-const registerForm: RegisterForm = reactive({
-  email: '',
-  password: '',
-  confirmPassword: '',
+const workoutForm: WorkoutForm = reactive({
+  workoutName: '',
+  workoutType: 'select-workout',
+  exercises: [],
 })
 
 const errorMsg: Ref<string | null> = ref(null)
 
-const router = useRouter()
+const statusMsg: Ref<string | null> = ref(null)
 
-const register = async () => {
-  if (registerForm.password !== registerForm.confirmPassword) {
-    errorMsg.value = 'Error: Passwords do not match'
-    setTimeout(() => {
-      errorMsg.value = null
-    }, 5000)
-    return
-  }
-  errorMsg.value = ''
-  try {
-    const { error } = await supabase.auth.signUp({
-      email: registerForm.email,
-      password: registerForm.password,
-    })
-    if (error) throw error
-    router.push({ name: 'login' })
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      errorMsg.value = error.message
-      setTimeout(() => {
-        errorMsg.value = null
-      }, 5000)
-    } else {
-      errorMsg.value = 'Oops! Something went wrong...'
-      setTimeout(() => {
-        errorMsg.value = null
-      }, 5000)
-    }
-  }
-}
+const router = useRouter()
 </script>
 
 <template>
-  <div class="register">
-    <div v-if="errorMsg" class="error">
+  <div class="create-workout">
+    <div v-if="statusMsg || errorMsg" class="error">
       <p class="error-msg">{{ errorMsg }}</p>
+      <p class="status-msg">{{ statusMsg }}</p>
     </div>
-    <form @submit.prevent="register" class="register-form">
-      <h1>Register</h1>
+    <form class="create-form">
+      <h1>Record Workout</h1>
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="workout-name">Workout Name</label>
         <input
-          id="email"
+          id="workout-name"
           type="text"
           class="form-input"
           required
-          v-model="registerForm.email"
+          v-model="workoutForm.workoutName"
         />
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
+        <label for="workout-type">Workout Type</label>
+        <select
+          id="workout-type"
           class="form-input"
           required
-          v-model="registerForm.password"
-        />
+          v-model="workoutForm.workoutType"
+        >
+          <option value="select-workout">Select Workout</option>
+          <option value="cardio">Cardio</option>
+          <option value="strength">Strength Training</option>
+        </select>
       </div>
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          class="form-input"
-          required
-          v-model="registerForm.confirmPassword"
-        />
-      </div>
-      <button type="submit" class="btn-register">Register</button>
-      <RouterLink :to="{ name: 'login' }" class="login-link"
-        >Already have an account?
-        <span style="color: var(--at-light-green)">Login</span></RouterLink
-      >
+      <div
+        v-if="workoutForm.workoutType === 'strength'"
+        class="form-group"
+      ></div>
+      <button type="submit" class="btn-register">Login</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-.register {
-  max-width: 640px;
+.create-workout {
+  max-width: 768px;
   margin-inline: auto;
   padding-inline: 1rem;
   padding-block: 2.5rem;
@@ -123,7 +86,11 @@ const register = async () => {
   color: rgb(239 68 68);
 }
 
-.register-form {
+.status-msg {
+  color: var(--at-light-green);
+}
+
+.create-form {
   padding: 2rem;
   display: flex;
   flex-direction: column;

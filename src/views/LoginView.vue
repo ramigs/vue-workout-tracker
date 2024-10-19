@@ -111,8 +111,8 @@ const login = async () => {
 }
 
 h1 {
-  font-size: 1.875rem; /* 30px */
-  line-height: 2.25rem; /* 36px */
+  font-size: 1.875rem;
+  line-height: 2.25rem;
   color: var(--at-light-green);
   margin-bottom: 1rem;
 }
