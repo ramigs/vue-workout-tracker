@@ -11,20 +11,15 @@ const userStore = useUserStore()
 const appReady = ref(false)
 
 onMounted(async () => {
-  console.log('onMounted')
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  console.log(user)
   if (!user) {
     appReady.value = true
   }
 })
 
 supabase.auth.onAuthStateChange((_, session) => {
-  console.log('onAuthStateChange')
-  console.log(session)
   userStore.setUser(session)
   appReady.value = true
 })
