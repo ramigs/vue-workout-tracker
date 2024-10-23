@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, ref, type Reactive, type Ref } from 'vue'
+import { reactive, ref, type Ref } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 
 type WorkoutType = 'cardio' | 'strength'
 
-interface StrengthTrainingExercise {
+export interface StrengthTrainingExercise {
   id: string
   exerciseName: string
   sets: '' | number
@@ -14,7 +14,7 @@ interface StrengthTrainingExercise {
 
 type CardioExerciseType = 'walk' | 'run'
 
-interface CardioExercise {
+export interface CardioExercise {
   id: string
   cardioExerciseType: 'select-cardio-exercise-type' | CardioExerciseType
   distance: '' | number
@@ -135,6 +135,17 @@ const saveWorkout = async () => {
         weight: '',
       },
     ]
+    workoutForm.cardioExercises = [
+      {
+        id: self.crypto.randomUUID(),
+        cardioExerciseType: 'select-cardio-exercise-type',
+        distance: '',
+        duration: '',
+      },
+    ]
+    setTimeout(() => {
+      statusMsg.value = null
+    }, 5000)
   } catch (error: unknown) {
     if (error instanceof Error) {
       errorMsg.value = error.message
