@@ -2,7 +2,7 @@
 import { reactive, ref, type Ref } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 
-type WorkoutType = 'cardio' | 'strength'
+export type WorkoutType = 'cardio' | 'strength'
 
 export interface StrengthTrainingExercise {
   id: string

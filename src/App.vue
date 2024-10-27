@@ -4,7 +4,6 @@ import Navigation from './components/Navigation.vue'
 import { onMounted, ref } from 'vue'
 import { supabase } from '@/lib/supabaseClient'
 import { useUserStore } from '@/stores/user'
-import { log } from 'console'
 
 const userStore = useUserStore()
 
