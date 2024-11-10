@@ -1,5 +1,8 @@
 # vue-workout-tracker
 
+Originally from [Vue 3 & Supabase | Workout Tracker
+App](https://www.youtube.com/watch?v=3tF0fGkd4ho).
+
 This template should help get you started developing with Vue 3 in Vite.
 
 ## Recommended IDE Setup
